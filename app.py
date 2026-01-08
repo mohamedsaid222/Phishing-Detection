@@ -39,36 +39,21 @@ def extract_features_final(url):
     raw_path_length = len(parsed_url.path)
     
     # Applying Log Transformation (Log(1+x)) to mitigate length bias
-    if 'url_length' in features_dict: 
-        features_dict['url_length'] = np.log1p(raw_url_length)
-    if 'path_length' in features_dict: 
-        features_dict['path_length'] = np.log1p(raw_path_length)
+    if 'url_length' in features_dict: features_dict['url_length'] = np.log1p(raw_url_length)
+    if 'path_length' in features_dict: features_dict['path_length'] = np.log1p(raw_path_length)
     
     # Other features
-    if 'valid_url' in features_dict: 
-        features_dict['valid_url'] = 1 
-    if 'at_symbol' in features_dict: 
-        features_dict['at_symbol'] = url.count('@')
-    if 'sensitive_words_count' in features_dict: 
-        features_dict['sensitive_words_count'] = len(
-            re.findall(r'(login|bank|secure|verify|account|paypal)', url.lower())
-        )
-    if 'isHttps' in features_dict: 
-        features_dict['isHttps'] = 1 if parsed_url.scheme == 'https' else 0
-    if 'nb_dots' in features_dict: 
-        features_dict['nb_dots'] = url.count('.')
-    if 'nb_hyphens' in features_dict: 
-        features_dict['nb_hyphens'] = url.count('-')
-    if 'nb_and' in features_dict: 
-        features_dict['nb_and'] = url.count('&') 
-    if 'nb_or' in features_dict: 
-        features_dict['nb_or'] = 1 if 'or' in url.lower() else 0
-    if 'nb_www' in features_dict: 
-        features_dict['nb_www'] = 1 if 'www' in parsed_url.netloc.lower() else 0
-    if 'nb_com' in features_dict: 
-        features_dict['nb_com'] = url.lower().count('.com')
-    if 'nb_underscore' in features_dict: 
-        features_dict['nb_underscore'] = url.count('_')
+    if 'valid_url' in features_dict: features_dict['valid_url'] = 1 
+    if 'at_symbol' in features_dict: features_dict['at_symbol'] = url.count('@')
+    if 'sensitive_words_count' in features_dict: features_dict['sensitive_words_count'] = len(re.findall(r'(login|bank|secure|verify|account|paypal)', url.lower()))
+    if 'isHttps' in features_dict: features_dict['isHttps'] = 1 if parsed_url.scheme == 'https' else 0
+    if 'nb_dots' in features_dict: features_dict['nb_dots'] = url.count('.')
+    if 'nb_hyphens' in features_dict: features_dict['nb_hyphens'] = url.count('-')
+    if 'nb_and' in features_dict: features_dict['nb_and'] = url.count('&') 
+    if 'nb_or' in features_dict: features_dict['nb_or'] = 1 if 'or' in url.lower() else 0
+    if 'nb_www' in features_dict: features_dict['nb_www'] = 1 if 'www' in parsed_url.netloc.lower() else 0
+    if 'nb_com' in features_dict: features_dict['nb_com'] = url.lower().count('.com')
+    if 'nb_underscore' in features_dict: features_dict['nb_underscore'] = url.count('_')
     
     features_df = pd.DataFrame([features_dict], columns=REQUIRED_FEATURES_FINAL)
     return features_df
@@ -83,7 +68,6 @@ def load_model():
     except FileNotFoundError:
         st.error(f"Error: Model file '{MODEL_PATH}' not found. Please ensure it is in the same folder.")
         return None
-
 
 def predict_url_final(url, model):
     """Predicts URL type using the de-biased feature set."""
@@ -109,7 +93,7 @@ def predict_url_final(url, model):
 
 # --- STREAMLIT UI ---
 
-st.title("🛡️ Phishing URL Detector (Final)")
+st.title("🛡️ Phishing URL Detector")
 st.markdown("### Advanced Detection with Log-Scaled Features")
 
 user_url = st.text_input(
@@ -131,6 +115,8 @@ if user_url and model:
         st.success(f"## ✅ Result: **LEGITIMATE**")
         st.markdown(f"#### Confidence: **{confidence:.2f}%**")
         st.info("SAFE: This URL looks clean and legitimate, confirmed by the debiased model.")
+
+    # Note: The technical details expander has been removed as requested.
 
     st.markdown("---")
     with st.expander("🔍 See Technical Details"):
