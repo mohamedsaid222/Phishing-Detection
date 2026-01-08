@@ -93,8 +93,9 @@ def predict_url_final(url, model):
 
 # --- STREAMLIT UI ---
 
-st.title("🛡️ Phishing URL Detector")
-st.markdown("### Advanced Detection with Log-Scaled Features")
+
+st.title("🛡️ URL Safety Check")
+st.markdown("### Powered by Random Forest and Log Transformation")
 
 user_url = st.text_input(
     "Enter a URL to check:",
@@ -109,16 +110,11 @@ if user_url and model:
     
     if prediction == "Phishing":
         st.error(f"## 🚨 Result: **PHISHING**")
-        st.markdown(f"#### Confidence: **{confidence:.2f}%**")
-        st.warning("⚠️ Warning: This site exhibits malicious patterns.")
+        st.markdown(f"#### Confidence Score: **{confidence:.2f}%**")
+        st.warning("⚠️ Warning: This URL exhibits high malicious patterns.")
     else:
         st.success(f"## ✅ Result: **LEGITIMATE**")
-        st.markdown(f"#### Confidence: **{confidence:.2f}%**")
-        st.info("SAFE: This URL looks clean and legitimate, confirmed by the debiased model.")
-
-    # Note: The technical details expander has been removed as requested.
-
-    st.markdown("---")
-    with st.expander("🔍 See Technical Details"):
-        st.write("Processed Features (Log-Transformed):")
-        st.dataframe(features_df)
+        st.markdown(f"#### Confidence Score: **{confidence:.2f}%**")
+        st.info("SAFE: The de-biased model confirms this URL is safe.")
+        
+    
